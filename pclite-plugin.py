@@ -30,19 +30,7 @@ log = logger.get(__name__)
 from PCLite.pclite import commands
 from PCLite.pclite import tests
 from PCLite.pclite import settings
-import sublime, sublime_plugin
-import imp
-
-# Tell modules to reload their dependancy trees now in a decorator!
-def reload(module, debugOnly=True):
-    def outer(func):
-        def inner(*args, **kwargs):
-            rld = (debugOnly and logger.isDebug()) or not debugOnly
-            if rld:
-                reloader.reload(module)
-            return func(*args, **kwargs)
-        return inner
-    return outer
+import sublime_plugin
 
 
 class PcliteInstallPackageCommand(sublime_plugin.WindowCommand):

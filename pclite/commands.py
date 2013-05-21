@@ -1,12 +1,15 @@
-from .lib import requests
-from . import settings
+from . import logger
+log = logger.get(__name__)
+from . import http
 from .lib.concurrent import futures
 
 executor = futures.ThreadPoolExecutor(max_workers=10)
 
+
 def command(fn):
     def wrap(*args, **kwargs):
         callback = args[0]
+
         def cb(fu):
             try:
                 callback(fu.result())
@@ -17,8 +20,12 @@ def command(fn):
     return wrap
 
 
+def run_command(fn, callback, *args, **kwargs):
+    ''' Convenience function to run a command without the decorator. '''
+    command(fn)(callback, *args, **kwargs)
+
+
 @command
 def get_package_list(callback):
-    print("run")
-    return ['bo', 'is', 'really, really', 'awesome']
-
+    j = http.getJSON('http://sublime.wbond.net/repositories.json')
+    return j["repositories"]

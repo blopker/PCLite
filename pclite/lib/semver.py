@@ -9,7 +9,8 @@ _REGEX = re.compile('^(?P<major>[0-9]+)'
                     '(\+(?P<build>[0-9A-Za-z]+(\.[0-9A-Za-z]+)*))?$')
 
 if 'cmp' not in __builtins__:
-    cmp = lambda a,b: (a > b) - (a < b)
+    cmp = lambda a, b: (a > b) - (a < b)
+
 
 def parse(version):
     """

@@ -1,6 +1,6 @@
 import sublime
 
-settingsObj = False
+settingsObj = {}
 
 def load(filename):
     global settingsObj

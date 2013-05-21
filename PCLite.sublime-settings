@@ -1,3 +1,5 @@
 {
-    "debug": true
+    "debug": true,
+    // Amount of time to cache HTTP requests in seconds.
+    "cache_time": 100
 }

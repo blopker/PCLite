@@ -1,5 +1,6 @@
 import unittest
 
+
 class TestSequenceFunctions(unittest.TestCase):
 
     def setUp(self):
@@ -11,4 +12,3 @@ class TestSequenceFunctions(unittest.TestCase):
 
     def test_set(self):
         self.assertEqual(self.set, set(range(10)))
-
