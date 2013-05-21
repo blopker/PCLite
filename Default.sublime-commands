@@ -2,9 +2,5 @@
     {
         "caption": "PCLite: Install Package",
         "command": "pclite_install_package"
-    },
-    {
-        "caption": "PCLite: Test Suite",
-        "command": "pclite_test"
     }
 ]

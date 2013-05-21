@@ -8,5 +8,5 @@ def run():
     for test in tests:
         name = __name__ + '.' + test
         unittest.main(module=name, argv=[""], exit=False)
-        # Reset settings incase we changed anything during tests
-        settings.init('PCLite.sublime-settings')
+        # Reset settings in case we changed anything during tests
+        settings.load('PCLite.sublime-settings')

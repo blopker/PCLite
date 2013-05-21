@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 '''
 
-from PCLite.pclite.lib import reloader
+# from PCLite.pclite.lib import reloader
 
 from PCLite.pclite import logger
 log = logger.get(__name__)
@@ -31,6 +31,7 @@ from PCLite.pclite import commands
 from PCLite.pclite import tests
 from PCLite.pclite import settings
 import sublime, sublime_plugin
+import imp
 
 # Tell modules to reload their dependancy trees now in a decorator!
 def reload(module, debugOnly=True):
@@ -56,18 +57,16 @@ class PcliteInstallPackageCommand(sublime_plugin.WindowCommand):
         print(item)
 
 
-# Also can run 'sublime.run_command('pclite_test')'
-class PcliteTestCommand(sublime_plugin.ApplicationCommand):
-    @reload(tests)
-    def run(self):
-        print('Running tests...')
-        tests.run()
+def run_tests():
+    print('Running PCLite tests...')
+    tests.run()
 
 
 def plugin_loaded():
-    reloader.enable()
     # Load dem settings
     settings.load('PCLite.sublime-settings')
     # Initialize the logger with this package's name
     logger.init(__name__, settings.get('debug', True))
+    if logger.isDebug():
+        run_tests()
     log.debug('PCLite loaded.')
