@@ -35,6 +35,10 @@ progressPool = futures.ThreadPoolExecutor(max_workers=1)
 
 
 def command(message='Processing'):
+    ''' Decorator for running commands in the command thread pool.
+    This decorator takes a message that will be displayed with a
+    progress meter as the command executes.
+    '''
     def outer(fn):
         def wrap(*args, **kwargs):
             callback = args[0]
@@ -42,15 +46,16 @@ def command(message='Processing'):
 
             def show_progress(msg):
                 pos = 0
-                sym = ['-', '\\', '|', '/']
+                # sym = ['-', '\\', '|', '/']
+                sym = '⣾⣽⣻⢿⡿⣟⣯⣷'
                 window = sublime.active_window()
                 view = window.active_view()
                 while running[0] is True:
                     view = window.active_view()
                     stat = msg + ' [' + sym[pos] + ']'
                     view.set_status(msg, stat)
-                    pos = (pos + 1) % len(sym)
-                    time.sleep(.2)
+                    pos = (pos + 3) % len(sym)
+                    time.sleep(.1)
                 view.erase_status(msg)
 
             progressPool.submit(show_progress, message)
@@ -74,5 +79,6 @@ def run_command(message, fn, callback, *args, **kwargs):
 
 @command('Getting package list')
 def get_package_list(callback):
+    time.sleep(5)
     j = http.getJSON(settings.get('repositories')[0])
     return j["repositories"]
