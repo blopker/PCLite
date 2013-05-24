@@ -28,15 +28,15 @@ from PCLite.pclite import logger
 log = logger.get(__name__)
 
 from PCLite.pclite import commands
-from PCLite.pclite import tests
-from PCLite.pclite import settings
+from PCLite.pclite import status
 import sublime_plugin
 
 
 class PcliteInstallPackageCommand(sublime_plugin.WindowCommand):
     def run(self):
         print('Running install command.')
-        commands.get_package_list(self.display_list)
+        status.message('bo is awesome')
+        # commands.get_package_list(self.display_list)
 
     def display_list(self, lis):
         self.package_list = lis
@@ -46,18 +46,3 @@ class PcliteInstallPackageCommand(sublime_plugin.WindowCommand):
         if item_idx is -1:
             return
         commands.install_package(self.package_list[item_idx])
-
-
-def run_tests():
-    print('Running PCLite tests...')
-    tests.run()
-
-
-def plugin_loaded():
-    # Load dem settings
-    settings.load('PCLite.sublime-settings')
-    # Initialize the logger with this package's name
-    logger.init(__name__, settings.get('debug', True))
-    if logger.isDebug():
-        run_tests()
-    log.debug('PCLite loaded.')
