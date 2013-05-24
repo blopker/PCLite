@@ -79,6 +79,10 @@ def run_command(message, fn, callback, *args, **kwargs):
 
 @command('Getting package list')
 def get_package_list(callback):
-    time.sleep(5)
     j = http.getJSON(settings.get('repositories')[0])
     return j["repositories"]
+
+
+@command('Installing package')
+def install_package(packageRepo):
+    return

@@ -39,10 +39,13 @@ class PcliteInstallPackageCommand(sublime_plugin.WindowCommand):
         commands.get_package_list(self.display_list)
 
     def display_list(self, lis):
+        self.package_list = lis
         self.window.show_quick_panel(lis, self.on_select)
 
-    def on_select(self, item):
-        print(item)
+    def on_select(self, item_idx):
+        if item_idx is -1:
+            return
+        commands.install_package(self.package_list[item_idx])
 
 
 def run_tests():
