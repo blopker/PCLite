@@ -22,6 +22,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 '''
 
+'''
+Abstraction for the HTTP layer.
+By @blopker
+'''
+
 from .lib import requests
 from . import settings
 import time

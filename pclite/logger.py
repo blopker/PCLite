@@ -1,6 +1,3 @@
-import logging
-from logging import StreamHandler, Formatter
-
 '''
 The MIT License
 
@@ -25,22 +22,24 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 '''
 '''
-Warpper of the python logging module for Sublime Text plugins.
+Wrapper of the python logging module for Sublime Text plugins.
 by @blopker
 '''
+import logging
+from logging import StreamHandler, Formatter
 
 log = False
 
 
 def init(name, debug=True):
-    ''' Initializes the named logger for the
-        rest of this program's execution.
-        All children loggers will assume this
-        loggers's log level if theirs is not set'''
+    ''' Initializes the named logger for the rest of this program's execution.
+    All children loggers will assume this loggers's log level if theirs is not
+    set. Suggestion: Put logger.init(__name__, debug) in the top __init__.py
+    module of your package.'''
 
     global log
 
-    if log is not False:
+    if log:
         # Logger already initialized.
         return
 
@@ -73,11 +72,7 @@ def _getFmt(plugin_name):
 
 
 def get(name):
-    ''' Get a new named logger. Usually called like: logger.get(__name__).
-    Wraps the getLogger method so you don't have to import two modules.'''
+    ''' Get a new named logger. Usually called like: logger.get(__name__).Short
+    and sweet wrapper for getLogger method so you don't have to import two
+    modules.'''
     return logging.getLogger(name)
-
-
-def isDebug():
-    ''' Returns True if debugging is enabled. '''
-    return log.getEffectiveLevel() == logging.DEBUG

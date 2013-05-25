@@ -21,8 +21,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 '''
-
+'''
+Global settings module for Sublime Test plugins
+By @blopker
+'''
 import sublime
+
+FILE_NAME = 'PCLite.sublime-settings'
 
 settingsObj = {}
 
@@ -30,7 +35,13 @@ settingsObj = {}
 def load(filename):
     global settingsObj
     settingsObj = sublime.load_settings(filename)
-    settingsObj.set('debug', True)
+    # In case settings file is missing the debug value.
+    debug = settingsObj.get('debug', True)
+    settingsObj.set('debug', debug)
+
+
+def isDebug():
+    get('debug')
 
 
 def get(*args):

@@ -1,8 +1,8 @@
-import imp
 import unittest
 from .. import settings
 
 tests = ['test_install']
+
 
 def run():
     for test in tests:

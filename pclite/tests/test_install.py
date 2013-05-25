@@ -1,13 +1,10 @@
 import unittest
+from .. import commands
 
 
 class TestSequenceFunctions(unittest.TestCase):
 
-    def setUp(self):
-        self.seq = list(range(10))
-        self.set = set(range(10))
-
-    def test_list(self):
+    def test_package_list(self):
         self.assertEqual(self.seq, list(range(10)))
 
     def test_set(self):

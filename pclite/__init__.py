@@ -11,9 +11,9 @@ def run_tests():
 
 def plugin_loaded():
     # Load dem settings
-    settings.load('PCLite.sublime-settings')
-    # Initialize the logger with this package's name
-    logger.init(__name__, settings.get('debug', True))
-    if logger.isDebug():
+    settings.load(settings.FILE_NAME)
+    # Initialize the logger with this package's root name
+    logger.init(__name__, settings.get('debug'))
+    if settings.isDebug():
         run_tests()
-    log.debug('PCLite loaded.')
+    log.debug('Loaded.')

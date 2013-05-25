@@ -27,72 +27,57 @@ log = logger.get(__name__)
 from . import settings
 from . import http
 from .lib.concurrent import futures
-import sublime
 import time
 
 commandPool = futures.ThreadPoolExecutor(max_workers=10)
 progressPool = futures.ThreadPoolExecutor(max_workers=1)
 
 
-def command(message='Processing'):
-    ''' Decorator for running commands in the command thread pool.
-    This decorator takes a message that will be displayed with a
-    progress meter as the command executes.
-    '''
-    def outer(fn):
-        def wrap(*args, **kwargs):
+def _is_function(fn):
+    return hasattr(fn, '__call__')
+
+
+def _error(msg):
+    return 'Command execution error: ' + msg
+
+
+def command(fn):
+    ''' Decorator for running commands asynchronously.
+    Command functions should always have a callback as the
+    first argument'''
+    def wrap(*args, **kwargs):
+        callback = ''
+        try:
             callback = args[0]
-            running = [True]
+        except IndexError:
+            log.error(_error('No callback supplied.'))
 
-            def show_progress(msg):
-                pos = 0
-                # sym = ['-', '\\', '|', '/']
-                sym = '⣾⣽⣻⢿⡿⣟⣯⣷'
-                window = sublime.active_window()
-                view = window.active_view()
-                while running[0] is True:
-                    view = window.active_view()
-                    stat = msg + ' [' + sym[pos] + ']'
-                    view.set_status(msg, stat)
-                    pos = (pos + 3) % len(sym)
-                    time.sleep(.1)
-                view.erase_status(msg)
+        if not _is_function(callback):
+            log.error(_error('%s is not a callback.', str(callback)))
+            return
 
-            progressPool.submit(show_progress, message)
-
-            def cb(fu):
-                try:
-                    running[0] = False
-                    callback(fu.result())
-                except Exception as e:
-                    raise e
-            commandFuture = commandPool.submit(fn, *args, **kwargs)
-            commandFuture.add_done_callback(cb)
-        return wrap
-    return outer
+        def cb(fu):
+            try:
+                callback(fu.result())
+            except Exception as e:
+                log.error(_error('Failed with %s'), str(e))
+                raise e
+        commandFuture = commandPool.submit(fn, *args, **kwargs)
+        commandFuture.add_done_callback(cb)
+    return wrap
 
 
-def run_command(message, fn, callback, *args, **kwargs):
+def run_command(fn, callback, *args, **kwargs):
     ''' Convenience function to run a command without the decorator. '''
-    command(message)(fn)(callback, *args, **kwargs)
+    command(fn)(callback, *args, **kwargs)
 
 
-@command('Getting package list')
+@command
 def get_package_list(callback):
     j = http.getJSON(settings.get('repositories')[0])
     return j["repositories"]
 
 
-@command('Installing package')
-def install_package(packageRepo):
+@command
+def install_package(callback, packageRepo):
     return
-
-
-def test(callback):
-    f = commandPool.submit(_test)
-    f.add_done_callback(callback)
-
-
-def _test():
-    time.sleep(5)
-    return []
