@@ -35,10 +35,15 @@ import sublime_plugin
 class PcliteInstallPackageCommand(sublime_plugin.WindowCommand):
     def run(self):
         print('Running install command.')
-        status.message('bo is awesome')
+        # status.message('bo is awesome')
+        self.l = status.loading('Bo is super awesome')
+        commands.test(self.display_list)
         # commands.get_package_list(self.display_list)
 
     def display_list(self, lis):
+        self.l.stop()
+        print('stop')
+        return
         self.package_list = lis
         self.window.show_quick_panel(lis, self.on_select)
 

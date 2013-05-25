@@ -36,8 +36,6 @@ class Loader(object):
         statusPool.submit(self._show_progress, message)
 
     def _show_progress(self, msg):
-        # Pick a random range for the message ID
-        r = str(random.randrange(0, 1000))
         pos = 0
         # sym = ['-', '\\', '|', '/']
         sym = '⣾⣽⣻⢿⡿⣟⣯⣷'
@@ -47,10 +45,10 @@ class Loader(object):
             view = window.active_view()
             stat = msg + ' [' + sym[pos] + ']'
             stat = 'PCLite: ' + stat
-            view.set_status(r, stat)
+            view.set_status(msg, stat)
             pos = (pos + 3) % len(sym)
             time.sleep(.1)
         view.erase_status(msg)
 
-    def cancel(self):
+    def stop(self):
         self.running = False

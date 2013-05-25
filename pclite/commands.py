@@ -86,3 +86,13 @@ def get_package_list(callback):
 @command('Installing package')
 def install_package(packageRepo):
     return
+
+
+def test(callback):
+    f = commandPool.submit(_test)
+    f.add_done_callback(callback)
+
+
+def _test():
+    time.sleep(5)
+    return []
