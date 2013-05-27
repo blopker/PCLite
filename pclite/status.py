@@ -55,6 +55,12 @@ def message(msg, seconds=5):
     statusPool.submit(_message_job, msg, seconds)
 
 
+def error(msg, seconds=5):
+    log.error(msg)
+    msg = 'ERROR: ' + msg
+    statusPool.submit(_message_job, msg, seconds)
+
+
 def _message_job(msg, seconds):
     view = _get_current_view()
     id = _get_id(msg)

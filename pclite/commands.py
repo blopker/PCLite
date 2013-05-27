@@ -26,8 +26,9 @@ from . import logger
 log = logger.get(__name__)
 from . import settings
 from . import http
+from . import io
 from .lib.concurrent import futures
-import time
+from .models import Repository
 
 commandPool = futures.ThreadPoolExecutor(max_workers=10)
 progressPool = futures.ThreadPoolExecutor(max_workers=1)
@@ -43,41 +44,58 @@ def _error(msg):
 
 def command(fn):
     ''' Decorator for running commands asynchronously.
-    Command functions should always have a callback as the
-    first argument'''
-    def wrap(*args, **kwargs):
-        callback = ''
-        try:
-            callback = args[0]
-        except IndexError:
-            log.error(_error('No callback supplied.'))
+    Command functions can have a callback as the
+    last argument'''
+    def wrap(*args):
+        callback = False
+        if len(args) > 0 and _is_function(args[-1]):
+            callback = args[-1]
 
-        if not _is_function(callback):
-            log.error(_error('%s is not a callback.', str(callback)))
-            return
-
-        def cb(fu):
+        def cb(future):
             try:
-                callback(fu.result())
+                result = future.result()
             except Exception as e:
                 log.error(_error('Failed with %s'), str(e))
+                callback(False)
                 raise e
-        commandFuture = commandPool.submit(fn, *args, **kwargs)
-        commandFuture.add_done_callback(cb)
+            else:
+                callback(result)
+
+        commandFuture = commandPool.submit(fn, *args)
+        if callback:
+            commandFuture.add_done_callback(cb)
     return wrap
 
 
-def run_command(fn, callback, *args, **kwargs):
-    ''' Convenience function to run a command without the decorator. '''
-    command(fn)(callback, *args, **kwargs)
+@command
+def get_repository(callback):
+    # Get all the repositories
+    repos = []
+    urls = settings.get('repositories', [])
+    for url in urls:
+        j = http.getJSON(url)
+        if j:
+            repos.append(Repository(j))
+
+    # Merge into one repo
+    repo = Repository()
+    for r in repos:
+        repo.merge(r)
+
+    if len(repo.packages) is 0:
+        return False
+    return repo
 
 
 @command
-def get_package_list(callback):
-    j = http.getJSON(settings.get('repositories')[0])
-    return j["repositories"]
-
-
-@command
-def install_package(callback, packageRepo):
-    return
+def install_package(package_name, repository, callback):
+    try:
+        p = repository.get_package(package_name)
+        if not p:
+            return False
+        zip_data = http.get_zip(p.url)
+        if not zip_data:
+            return False
+        return io.install_zip(p, zip_data)
+    except Exception:
+        return False

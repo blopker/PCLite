@@ -22,9 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 '''
 
-from PCLite.pclite import logger
-log = logger.get(__name__)
-
 from PCLite.pclite import commands
 from PCLite.pclite import status
 import sublime_plugin
@@ -34,17 +31,29 @@ class PcliteInstallPackageCommand(sublime_plugin.WindowCommand):
     def run(self):
         print('Running install command.')
         self.status = status.loading('Getting package list')
-        commands.get_package_list(self.display_list)
+        commands.get_repository(self.display_list)
 
-    def display_list(self, lis):
+    def display_list(self, repo):
         self.status.stop()
-        if not lis:
-            status.message('Package list not found. Please check internet connection.')
+        if not repo:
+            status.error('Package list not found. Please check internet ' +
+                         'connection or enable debug in the settings and ' +
+                         'report the stack traces.')
             return
-        self.package_list = lis
-        self.window.show_quick_panel(lis, self.on_select)
+        self.repo = repo
+        self.list = repo.install_list()
+        self.window.show_quick_panel(self.list, self.on_select)
 
     def on_select(self, item_idx):
         if item_idx is -1:
             return
-        commands.install_package(self.package_list[item_idx])
+        p = self.list[item_idx][0]
+        self.status = status.loading('Installing package: %s' % p)
+        commands.install_package(p, self.repo, self.install_success)
+
+    def install_success(self, success):
+        self.status.stop()
+        if success:
+            status.message('Package install was successful!')
+        else:
+            status.error('Package install was unsuccessful.')

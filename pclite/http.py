@@ -64,11 +64,27 @@ def cache(fn):
 
 @cache
 def get(url):
-    r = requests.get(url)
-    return r.content
+    try:
+        r = requests.get(url).content
+    except ConnectionError:
+        r = False
+    return r
 
 
 @cache
 def getJSON(jsonURL):
-    r = requests.get(jsonURL)
-    return r.json()
+    try:
+        r = requests.get(jsonURL).json()
+    except ConnectionError:
+        r = False
+    return r
+
+
+@cache
+def get_zip(zipurl):
+    zipurl = zipurl.replace('https', 'http')
+    try:
+        r = requests.get(zipurl).content
+    except ConnectionError:
+        r = False
+    return r

@@ -1,7 +1,7 @@
 import unittest
 from .. import settings
 
-tests = ['test_install']
+tests = ['test_repository']
 
 
 def run():

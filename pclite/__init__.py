@@ -5,7 +5,7 @@ log = logger.get(__name__)
 
 
 def run_tests():
-    print('Running PCLite tests...')
+    log.debug('Running PCLite tests...')
     tests.run()
 
 

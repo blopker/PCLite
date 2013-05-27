@@ -40,9 +40,13 @@ def load(filename):
     settingsObj.set('debug', debug)
 
 
-def isDebug():
-    get('debug')
-
-
 def get(*args):
     return settingsObj.get(*args)
+
+
+def isDebug():
+    return get('debug')
+
+
+def platform():
+    return sublime.platform()

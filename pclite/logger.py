@@ -61,8 +61,8 @@ def init(name, debug=True):
     log.debug("Logger for %s initialized.", plugin_name)
 
 
-def _getDebugFmt(plugin_name):
-    fmt = '%(levelname)s:' + plugin_name + '.%(module)s: %(message)s'
+def _getDebugFmt(name):
+    fmt = '%(levelname)s:' + name + '.%(module)s:%(lineno)d: %(message)s'
     return Formatter(fmt=fmt)
 
 
