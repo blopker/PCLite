@@ -34,6 +34,7 @@ import time
 import sublime
 
 statusPool = futures.ThreadPoolExecutor(max_workers=1)
+PLUGIN_NAME = 'PCLite'
 
 
 def _get_current_view():
@@ -43,12 +44,20 @@ def _get_current_view():
 
 
 def _append_plugin_name(msg):
-    return 'PCLite: %s' % msg
+    return '%s: %s' % (PLUGIN_NAME, msg)
 
 
 def _get_id(msg):
     return msg + str(time.time())
 
+
+def _message_job(msg, seconds):
+    view = _get_current_view()
+    id = _get_id(msg)
+    msg = _append_plugin_name(msg)
+    view.set_status(id, msg)
+    time.sleep(seconds)
+    view.erase_status(id)
 
 def message(msg, seconds=5):
     log.info(msg)
@@ -61,22 +70,13 @@ def error(msg, seconds=5):
     statusPool.submit(_message_job, msg, seconds)
 
 
-def _message_job(msg, seconds):
-    view = _get_current_view()
-    id = _get_id(msg)
-    msg = _append_plugin_name(msg)
-    view.set_status(id, msg)
-    time.sleep(seconds)
-    view.erase_status(id)
-
-
 def loading(msg):
-
     return Loader(msg)
 
 
 class Loader(object):
-    '''Class to start and cancel the status loading message.'''
+    '''Class to start and cancel the status loading message.
+    Call stop() on this object to remove the loading message.'''
     def __init__(self, message):
         self.message = message
         self.running = True

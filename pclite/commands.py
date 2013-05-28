@@ -27,48 +27,11 @@ log = logger.get(__name__)
 from . import settings
 from . import http
 from . import io
-from .lib.concurrent import futures
+from .async import async
 from .models import Repository
 
-commandPool = futures.ThreadPoolExecutor(max_workers=10)
-progressPool = futures.ThreadPoolExecutor(max_workers=1)
 
-
-def _is_function(fn):
-    return hasattr(fn, '__call__')
-
-
-def _error(msg):
-    return 'Command execution error: ' + msg
-
-
-def command(fn):
-    ''' Decorator for running commands asynchronously.
-    Command functions can have a callback as the
-    last argument'''
-    def wrap(*args):
-        callback = False
-        if len(args) > 0 and _is_function(args[-1]):
-            callback = args[-1]
-            args = args[:-1]
-
-        def cb(future):
-            try:
-                result = future.result()
-            except Exception as e:
-                log.error(_error('Failed with %s'), str(e))
-                callback(False)
-                raise e
-            else:
-                callback(result)
-
-        commandFuture = commandPool.submit(fn, *args)
-        if callback:
-            commandFuture.add_done_callback(cb)
-    return wrap
-
-
-@command
+@async
 def get_repository():
     # Get all the repositories
     repos = []
@@ -88,7 +51,7 @@ def get_repository():
     return repo
 
 
-@command
+@async
 def install_package(package_name, repository):
     try:
         p = repository.get_package(package_name)
@@ -105,12 +68,12 @@ def install_package(package_name, repository):
         return False
 
 
-@command
+@async
 def get_installed():
     return settings.get('installed_packages')
 
 
-@command
+@async
 def remove_package(package_name):
     settings.remove_package(package_name)
     if io.remove_zip(package_name):
