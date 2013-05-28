@@ -59,6 +59,7 @@ def _message_job(msg, seconds):
     time.sleep(seconds)
     view.erase_status(id)
 
+
 def message(msg, seconds=5):
     log.info(msg)
     statusPool.submit(_message_job, msg, seconds)

@@ -22,11 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 '''
 '''
-Module to run functions asynchronously.
+Decorator to run functions asynchronously.
 '''
 from .lib.concurrent import futures
-
+from . import logger
+log = logger.get(__name__)
 asyncPool = futures.ThreadPoolExecutor(max_workers=10)
+
 
 def _is_function(fn):
     return hasattr(fn, '__call__')
