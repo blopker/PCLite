@@ -50,6 +50,7 @@ def command(fn):
         callback = False
         if len(args) > 0 and _is_function(args[-1]):
             callback = args[-1]
+            args = args[:-1]
 
         def cb(future):
             try:
@@ -68,7 +69,7 @@ def command(fn):
 
 
 @command
-def get_repository(callback):
+def get_repository():
     # Get all the repositories
     repos = []
     urls = settings.get('repositories', [])
@@ -88,14 +89,30 @@ def get_repository(callback):
 
 
 @command
-def install_package(package_name, repository, callback):
+def install_package(package_name, repository):
     try:
         p = repository.get_package(package_name)
         if not p:
-            return False
+            return "Unable to get repository."
         zip_data = http.get_zip(p.url)
         if not zip_data:
-            return False
-        return io.install_zip(p, zip_data)
+            return "Unable get package."
+        if not io.install_zip(p, zip_data):
+            return "Unable to install package."
+        settings.add_package(p)
+        return "%s installed successfully!" % p.name
     except Exception:
         return False
+
+
+@command
+def get_installed():
+    return settings.get('installed_packages')
+
+
+@command
+def remove_package(package_name):
+    settings.remove_package(package_name)
+    if io.remove_zip(package_name):
+        return "Package removed!"
+    return False

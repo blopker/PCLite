@@ -4,6 +4,8 @@ import shutil
 import os
 import sublime
 
+PKG_SUFFIX = '.sublime-package'
+
 
 def _zipdir(path, zip):
     for root, dirs, files in os.walk(path):
@@ -34,7 +36,7 @@ def install_zip(package, zip_data):
             myzip.extractall(path=tmpname)
 
         # Repackage with correct name, location and folder tree
-        pkg = package.name + '.sublime-package'
+        pkg = package.name + PKG_SUFFIX
         install_path = os.path.join(sublime.installed_packages_path(), pkg)
         with ZipFile(install_path, 'w') as myzip:
             _zipdir(os.path.join(tmpname, prefix), myzip)
@@ -44,4 +46,14 @@ def install_zip(package, zip_data):
     finally:
         shutil.rmtree(tmpname)
         os.remove(zip_file)
+    return True
+
+
+def remove_zip(package_name):
+    pkg = package_name + PKG_SUFFIX
+    pkg_path = os.path.join(sublime.installed_packages_path(), pkg)
+    try:
+        os.remove(pkg_path)
+    except Exception:
+        return False
     return True

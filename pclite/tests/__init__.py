@@ -12,4 +12,4 @@ def run():
         name = __name__ + '.' + test
         unittest.main(module=name, argv=[""], exit=False)
         # Reset settings in case we changed anything during tests
-        settings.load('PCLite.sublime-settings')
+        settings.load()

@@ -11,7 +11,7 @@ def run_tests():
 
 def plugin_loaded():
     # Load dem settings
-    settings.load(settings.FILE_NAME)
+    settings.load()
     # Initialize the logger with this package's root name
     logger.init(__name__, settings.get('debug'))
     if settings.isDebug():

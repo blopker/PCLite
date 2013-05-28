@@ -32,12 +32,13 @@ FILE_NAME = 'PCLite.sublime-settings'
 settingsObj = {}
 
 
-def load(filename):
+def load():
     global settingsObj
-    settingsObj = sublime.load_settings(filename)
+    settingsObj = sublime.load_settings(FILE_NAME)
     # In case settings file is missing the debug value.
-    debug = settingsObj.get('debug', True)
-    settingsObj.set('debug', debug)
+    debug = settingsObj.get('debug')
+    if not debug:
+        settingsObj.set('debug', debug)
 
 
 def get(*args):
@@ -50,3 +51,18 @@ def isDebug():
 
 def platform():
     return sublime.platform()
+
+
+def add_package(package):
+    pkgs = settingsObj.get('installed_packages', [])
+    pkgs.append(package.name)
+    settingsObj.set('installed_packages', pkgs)
+    sublime.save_settings(FILE_NAME)
+
+
+def remove_package(package_name):
+    pkgs = settingsObj.get('installed_packages', [])
+    if package_name in pkgs:
+        pkgs.remove(package_name)
+    settingsObj.set('installed_packages', pkgs)
+    sublime.save_settings(FILE_NAME)

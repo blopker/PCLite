@@ -2,5 +2,9 @@
     {
         "caption": "PCLite: Install Package",
         "command": "pclite_install_package"
+    },
+    {
+        "caption": "PCLite: Remove Package",
+        "command": "pclite_remove_package"
     }
 ]

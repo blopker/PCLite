@@ -51,9 +51,38 @@ class PcliteInstallPackageCommand(sublime_plugin.WindowCommand):
         self.status = status.loading('Installing package: %s' % p)
         commands.install_package(p, self.repo, self.install_success)
 
-    def install_success(self, success):
+    def install_success(self, message):
         self.status.stop()
-        if success:
-            status.message('Package install was successful!')
+        if message:
+            status.message(message)
         else:
             status.error('Package install was unsuccessful.')
+
+
+class PcliteRemovePackageCommand(sublime_plugin.WindowCommand):
+    def run(self):
+        print('Running remove command.')
+        self.status = status.loading('Getting installed package list')
+        commands.get_installed(self.display_list)
+
+    def display_list(self, installed):
+        self.status.stop()
+        if not installed:
+            status.error('No packages installed! Please install some first.')
+            return
+        self.list = installed
+        self.window.show_quick_panel(self.list, self.on_select)
+
+    def on_select(self, item_idx):
+        if item_idx is -1:
+            return
+        p = self.list[item_idx]
+        self.status = status.loading('Removing package: %s' % p)
+        commands.remove_package(p, self.remove_success)
+
+    def remove_success(self, message):
+        self.status.stop()
+        if message:
+            status.message(message)
+        else:
+            status.error('Package removal was unsuccessful.')
