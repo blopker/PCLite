@@ -38,7 +38,7 @@ def load():
     # In case settings file is missing the debug value.
     debug = settingsObj.get('debug')
     if not debug:
-        settingsObj.set('debug', debug)
+        settingsObj.set('debug', True)
 
 
 def get(*args):
