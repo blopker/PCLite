@@ -1,1 +1,2 @@
 Use winreg to detect windows proxies
+Use pycurl for linux SSL
