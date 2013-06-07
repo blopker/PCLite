@@ -24,14 +24,23 @@ THE SOFTWARE.
 from .downloader_base import DownloaderBase
 from ..lib import requests
 
+
 class Downloader(DownloaderBase):
-  """docstring for Downloader"""
-  def get(self, url):
-    return requests.get(url).content
+    """docstring for Downloader"""
+    def __init__(self):
+        super().__init__()
 
-  def get_json(self, url):
-    return requests.get(jsonURL).json()
+    def get(self, url):
+        if not self.SSL:
+            url = self._strip_https(url)
+        return requests.get(url).content
 
-  def get_file(self, url):
-    return requests.get(url).content
+    def get_json(self, url):
+        if not self.SSL:
+            url = self._strip_https(url)
+        return requests.get(url).json()
 
+    def get_file(self, url):
+        if not self.SSL:
+            url = self._strip_https(url)
+        return requests.get(url).content

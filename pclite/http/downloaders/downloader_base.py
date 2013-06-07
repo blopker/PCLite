@@ -25,19 +25,26 @@ import abc
 
 
 class DownloaderBase(metaclass=abc.ABCMeta):
-  """docstring for DownloaderBase"""
+    """docstring for DownloaderBase"""
+    def __init__(self):
+        # Check if this OS supports SSL
+        try:
+            import ssl
+            self.SSL = True
+        except ImportError:
+            self.SSL = False
 
-  @abs.abstractmethod
-  def get(self, url):
-    raise NotImplementedError()
+    @abs.abstractmethod
+    def get(self, url):
+        raise NotImplementedError()
 
-  @abs.abstractmethod
-  def get_json(self, url):
-    raise NotImplementedError()
+    @abs.abstractmethod
+    def get_json(self, url):
+        raise NotImplementedError()
 
-  @abs.abstractmethod
-  def get_file(self, url):
-    raise NotImplementedError()
+    @abs.abstractmethod
+    def get_file(self, url):
+        raise NotImplementedError()
 
-
-
+    def _strip_https(self, url):
+        return url.replace('https://', 'http://')
