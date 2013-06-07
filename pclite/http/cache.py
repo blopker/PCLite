@@ -21,22 +21,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 '''
-'''
-Abstraction for the HTTP layer.
-By @blopker
-'''
-
-from .lib import requests
 from . import settings
 import time
-
-# Check if this OS supports SSL
-try:
-    import ssl
-except ImportError:
-    SSL = False
-else:
-    SSL = True
 
 
 def cache(fn):
@@ -67,40 +53,3 @@ def cache(fn):
             putCache(args, ans)
             return ans
     return wrap
-
-
-# Changes URL based on environment
-def _fixURL(url):
-    if not SSL:
-        url = url.replace('https://', 'http://')
-    return url
-
-
-@cache
-def get(url):
-    url = _fixURL(url)
-    try:
-        r = requests.get(url).content
-    except ConnectionError:
-        r = False
-    return r
-
-
-@cache
-def getJSON(jsonURL):
-    jsonURL = _fixURL(jsonURL)
-    try:
-        r = requests.get(jsonURL).json()
-    except ConnectionError:
-        r = False
-    return r
-
-
-@cache
-def get_zip(zipurl):
-    zipurl = _fixURL(zipurl)
-    try:
-        r = requests.get(zipurl).content
-    except ConnectionError:
-        r = False
-    return r

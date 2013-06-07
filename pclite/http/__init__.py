@@ -25,82 +25,35 @@ THE SOFTWARE.
 Abstraction for the HTTP layer.
 By @blopker
 '''
+from . import cache
+from . import downloaders
 
-from .lib import requests
-from . import settings
-import time
-
-# Check if this OS supports SSL
-try:
-    import ssl
-except ImportError:
-    SSL = False
-else:
-    SSL = True
-
-
-def cache(fn):
-    ''' A decorator to cache method invocation.
-    Cache expires after a set time.
-    '''
-    cacheDB = {}
-
-    def isCached(args):
-        if args in cacheDB:
-            cache_time = settings.get('cache_time', 0)
-            age = time.time() - cacheDB[args][0]
-            if age < cache_time:
-                return True
-        return False
-
-    def putCache(args, ans):
-        cacheDB[args] = (time.time(), ans)
-
-    def getCache(args):
-        return cacheDB[args][1]
-
-    def wrap(*args):
-        if isCached(args):
-            return getCache(args)
-        else:
-            ans = fn(*args)
-            putCache(args, ans)
-            return ans
-    return wrap
-
-
-# Changes URL based on environment
-def _fixURL(url):
-    if not SSL:
-        url = url.replace('https://', 'http://')
-    return url
+downloader = downloaders.get()
 
 
 @cache
 def get(url):
-    url = _fixURL(url)
     try:
-        r = requests.get(url).content
+        r = downloader.get(url)
     except ConnectionError:
         r = False
     return r
 
 
 @cache
-def getJSON(jsonURL):
-    jsonURL = _fixURL(jsonURL)
+def get_json(jsonURL):
     try:
-        r = requests.get(jsonURL).json()
+        r = downloader.get_json(jsonURL)
     except ConnectionError:
         r = False
     return r
 
 
 @cache
-def get_zip(zipurl):
-    zipurl = _fixURL(zipurl)
+def get_file(zipurl):
+    zipurl = zipurl.replace('https', 'http')
     try:
-        r = requests.get(zipurl).content
+        r = downloader.get_file(zipurl)
     except ConnectionError:
         r = False
     return r
