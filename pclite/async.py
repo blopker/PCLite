@@ -41,7 +41,22 @@ def _error(msg):
 def async(fn):
     ''' Decorator for running functions asynchronously.
     Async functions can have a callback as the
-    last argument'''
+    last argument.
+
+    e.x. no callback:
+    @async
+    def no_callback(arg):
+        chage_some_state(arg)
+
+    no_callback(2)
+
+    or has callback:
+    @async
+    def has_callback(arg):
+        return arg*2
+
+    has_callback(2, callback)
+    '''
     def wrap(*args):
         callback = False
         if len(args) > 0 and _is_function(args[-1]):

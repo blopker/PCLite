@@ -31,6 +31,14 @@ from .lib import requests
 from . import settings
 import time
 
+# Check if this OS supports SSL
+try:
+    import ssl
+except ImportError:
+    SSL = False
+else:
+    SSL = True
+
 
 def cache(fn):
     ''' A decorator to cache method invocation.
@@ -62,8 +70,16 @@ def cache(fn):
     return wrap
 
 
+# Changes URL based on environment
+def _fixURL(url):
+    if not SSL:
+        url = url.replace('https://', 'http://')
+    return url
+
+
 @cache
 def get(url):
+    url = _fixURL(url)
     try:
         r = requests.get(url).content
     except ConnectionError:
@@ -73,6 +89,7 @@ def get(url):
 
 @cache
 def getJSON(jsonURL):
+    jsonURL = _fixURL(jsonURL)
     try:
         r = requests.get(jsonURL).json()
     except ConnectionError:
@@ -82,7 +99,7 @@ def getJSON(jsonURL):
 
 @cache
 def get_zip(zipurl):
-    zipurl = zipurl.replace('https', 'http')
+    zipurl = _fixURL(zipurl)
     try:
         r = requests.get(zipurl).content
     except ConnectionError:
