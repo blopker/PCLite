@@ -32,6 +32,9 @@ def cache(fn):
     cacheDB = {}
 
     def isCached(args):
+        # No caching for debugging.
+        if settings.isDebug():
+            return False
         if args in cacheDB:
             cache_time = settings.get('cache_time', 0)
             age = time.time() - cacheDB[args][0]
