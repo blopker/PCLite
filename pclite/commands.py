@@ -56,15 +56,15 @@ def install_package(package_name, repository):
     try:
         p = repository.get_package(package_name)
         if not p:
-            return "Unable to get repository."
+            return 'Unable to get repository.'
         zip_data = http.get_file(p.url)
         if not zip_data:
-            return "Unable get package."
+            return 'Unable get package %s.' % p.name
         if not io.install_zip(p, zip_data):
-            return "Unable to install package."
+            return 'Unable to install package.'
         settings.add_package(p)
-        return "%s installed successfully!" % p.name
-    except Exception:
+        return '%s installed successfully!' % p.name
+    except:
         return False
 
 

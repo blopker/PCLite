@@ -21,30 +21,19 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 '''
-import abc
+from abc import ABCMeta, abstractmethod
 
 
-class DownloaderBase(metaclass=abc.ABCMeta):
+class DownloaderBase(object, metaclass=ABCMeta):
     """docstring for DownloaderBase"""
-    def __init__(self):
-        # Check if this OS supports SSL
-        try:
-            import ssl
-            self.SSL = True
-        except ImportError:
-            self.SSL = False
-
-    @abs.abstractmethod
+    @abstractmethod
     def get(self, url):
         raise NotImplementedError()
 
-    @abs.abstractmethod
+    @abstractmethod
     def get_json(self, url):
         raise NotImplementedError()
 
-    @abs.abstractmethod
+    @abstractmethod
     def get_file(self, url):
         raise NotImplementedError()
-
-    def _strip_https(self, url):
-        return url.replace('https://', 'http://')

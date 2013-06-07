@@ -26,7 +26,18 @@ Module to determine the correct downloader to use.
 By @blopker
 '''
 from . import requests
+from . import null
+from ... import settings
+
+# Check if this OS supports SSL
+try:
+    import ssl
+    SSL = True
+except ImportError:
+    SSL = False
 
 
 def get():
-    return requests.Downloader()
+    # if settings.platform() == 'linux' and not SSL:
+    #     return null.NullDownloader()
+    return requests.RequestsDownloader()

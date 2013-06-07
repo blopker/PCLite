@@ -21,35 +21,16 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 '''
-from .. import settings
-import time
+from .downloader_base import DownloaderBase
 
 
-def cache(fn):
-    ''' A decorator to cache method invocation.
-    Cache expires after a set time.
-    '''
-    cacheDB = {}
+class NullDownloader(DownloaderBase):
+    """docstring for Downloader"""
+    def get(self, url):
+        raise NotImplementedError()
 
-    def isCached(args):
-        if args in cacheDB:
-            cache_time = settings.get('cache_time', 0)
-            age = time.time() - cacheDB[args][0]
-            if age < cache_time:
-                return True
-        return False
+    def get_json(self, url):
+        raise NotImplementedError()
 
-    def putCache(args, ans):
-        cacheDB[args] = (time.time(), ans)
-
-    def getCache(args):
-        return cacheDB[args][1]
-
-    def wrap(*args):
-        if isCached(args):
-            return getCache(args)
-        else:
-            ans = fn(*args)
-            putCache(args, ans)
-            return ans
-    return wrap
+    def get_file(self, url):
+        raise NotImplementedError()

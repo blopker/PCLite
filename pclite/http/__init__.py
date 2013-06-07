@@ -25,35 +25,40 @@ THE SOFTWARE.
 Abstraction for the HTTP layer.
 By @blopker
 '''
-from . import cache
+from .cache import cache
 from . import downloaders
+from .. import logger
+import sys
+import traceback
+log = logger.get(__name__)
 
 downloader = downloaders.get()
 
 
 @cache
 def get(url):
-    try:
-        r = downloader.get(url)
-    except ConnectionError:
-        r = False
-    return r
+    return _run_downloader(downloader.get, url)
 
 
 @cache
-def get_json(jsonURL):
-    try:
-        r = downloader.get_json(jsonURL)
-    except ConnectionError:
-        r = False
-    return r
+def get_json(url):
+    return _run_downloader(downloader.get_json, url)
 
 
 @cache
-def get_file(zipurl):
-    zipurl = zipurl.replace('https', 'http')
+def get_file(url):
+    return _run_downloader(downloader.get_file, url)
+
+
+def _run_downloader(fn, url):
     try:
-        r = downloader.get_file(zipurl)
-    except ConnectionError:
-        r = False
-    return r
+        return fn(url)
+    except NotImplementedError:
+        log.error('Function %s not implemented in downloader %s.',
+                  fn.__name__, downloader.__class__.__name__)
+    except AttributeError as e:
+        log.error(e)
+    except:
+        log.error('Unexpected exception: %s', sys.exc_info()[0])
+        traceback.print_exc()
+    return False

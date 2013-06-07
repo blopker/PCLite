@@ -22,25 +22,18 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 '''
 from .downloader_base import DownloaderBase
-from ..lib import requests
+from ...lib import requests as req
+from ... import logger
+log = logger.get(__name__)
 
 
-class Downloader(DownloaderBase):
+class RequestsDownloader(DownloaderBase):
     """docstring for Downloader"""
-    def __init__(self):
-        super().__init__()
-
     def get(self, url):
-        if not self.SSL:
-            url = self._strip_https(url)
-        return requests.get(url).content
+        return req.get(url).content
 
     def get_json(self, url):
-        if not self.SSL:
-            url = self._strip_https(url)
-        return requests.get(url).json()
+        return req.get(url).json()
 
     def get_file(self, url):
-        if not self.SSL:
-            url = self._strip_https(url)
-        return requests.get(url).content
+        return req.get(url).content
