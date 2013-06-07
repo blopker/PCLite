@@ -37,7 +37,7 @@ def get_repository():
     repos = []
     urls = settings.get('repositories', [])
     for url in urls:
-        j = http.getJSON(url)
+        j = http.get_json(url)
         if j:
             repos.append(Repository(j))
 
@@ -57,7 +57,7 @@ def install_package(package_name, repository):
         p = repository.get_package(package_name)
         if not p:
             return "Unable to get repository."
-        zip_data = http.get_zip(p.url)
+        zip_data = http.get_file(p.url)
         if not zip_data:
             return "Unable get package."
         if not io.install_zip(p, zip_data):

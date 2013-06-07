@@ -21,12 +21,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 '''
-'''
-Abstraction for the HTTP layer.
-By @blopker
-'''
-
-from .lib import requests
 from . import settings
 import time
 
@@ -59,31 +53,3 @@ def cache(fn):
             putCache(args, ans)
             return ans
     return wrap
-
-
-@cache
-def get(url):
-    try:
-        r = requests.get(url).content
-    except ConnectionError:
-        r = False
-    return r
-
-
-@cache
-def getJSON(jsonURL):
-    try:
-        r = requests.get(jsonURL).json()
-    except ConnectionError:
-        r = False
-    return r
-
-
-@cache
-def get_zip(zipurl):
-    zipurl = zipurl.replace('https', 'http')
-    try:
-        r = requests.get(zipurl).content
-    except ConnectionError:
-        r = False
-    return r
