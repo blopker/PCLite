@@ -24,6 +24,7 @@ THE SOFTWARE.
 '''
 Decorator to run functions asynchronously.
 '''
+import traceback
 from .lib.concurrent import futures
 from . import logger
 log = logger.get(__name__)
@@ -41,7 +42,7 @@ def _error(msg):
 def async(fn):
     ''' Decorator for running functions asynchronously.
     Async functions can have a callback as the
-    last argument.
+    last argument. Returns False if uncaught exception.
 
     e.x. no callback:
     @async
@@ -66,12 +67,12 @@ def async(fn):
         def cb(future):
             try:
                 result = future.result()
-            except Exception as e:
-                log.error(_error('Failed with %s'), str(e))
-                callback(False)
-                raise e
-            else:
                 callback(result)
+            except:
+                log.error('Command execution error:')
+                traceback.print_exc()
+                callback(False)
+            return
 
         asyncFuture = asyncPool.submit(fn, *args)
         if callback:

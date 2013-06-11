@@ -26,7 +26,7 @@ class TestIO(unittest.TestCase):
         pzip = pname + '.sublime-package'
         ppath = os.path.join(self.inst_path, pzip)
         p = Package(pname)
-        success = io.install_zip(p, self._get_zip_data())
+        success = io.install_package(p, self._get_zip_data())
 
         self.assertTrue(success)
         self.assertTrue(os.path.exists(ppath))

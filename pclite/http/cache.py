@@ -32,7 +32,7 @@ def cache(fn):
     cacheDB = {}
 
     def isCached(args):
-        # No caching for debugging.
+        # No cache for debugging.
         if settings.isDebug():
             return False
         if args in cacheDB:

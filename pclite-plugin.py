@@ -51,12 +51,12 @@ class PcliteInstallPackageCommand(sublime_plugin.WindowCommand):
         self.status = status.loading('Installing package: %s' % p)
         commands.install_package(p, self.repo, self.install_success)
 
-    def install_success(self, message):
+    def install_success(self, success):
         self.status.stop()
-        if message:
-            status.message(message)
+        if success:
+            status.message('Package installed successfully!')
         else:
-            status.error('Package install was unsuccessful.')
+            status.error('Package install was unsuccessful. Please check console.')
 
 
 class PcliteRemovePackageCommand(sublime_plugin.WindowCommand):

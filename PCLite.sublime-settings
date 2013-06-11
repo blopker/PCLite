@@ -4,6 +4,8 @@
     "debug": false,
     // Amount of time to cache HTTP requests in seconds.
     "cache_time": 100,
+    // HTTP timeout in seconds
+    "http_timeout": 10,
     // Names of the packages to be managed.
     "installed_packages": []
 }

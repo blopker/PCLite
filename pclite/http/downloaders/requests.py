@@ -25,15 +25,27 @@ from .downloader_base import DownloaderBase
 from ...lib import requests as req
 from ... import logger
 log = logger.get(__name__)
+import traceback
 
 
 class RequestsDownloader(DownloaderBase):
-    """docstring for Downloader"""
+    """docstring for RequestsDownloader"""
     def get(self, url):
-        return req.get(url).content
+        try:
+            return req.get(url)
+        except TypeError:
+            log.error('This platform does not support SSL with the Requests downloader.')
+            traceback.print_exc()
+        return False
 
     def get_json(self, url):
-        return req.get(url).json()
+        a = self.get(url)
+        if a:
+            a = a.json()
+        return a
 
     def get_file(self, url):
-        return req.get(url).content
+        a = self.get(url)
+        if a:
+            a = a.content
+        return a

@@ -28,9 +28,9 @@ By @blopker
 from .cache import cache
 from . import downloaders
 from .. import logger
+log = logger.get(__name__)
 import sys
 import traceback
-log = logger.get(__name__)
 
 downloader = downloaders.get()
 
@@ -58,6 +58,7 @@ def _run_downloader(fn, url):
                   fn.__name__, downloader.__class__.__name__)
     except AttributeError as e:
         log.error(e)
+        traceback.print_exc()
     except:
         log.error('Unexpected exception: %s', sys.exc_info()[0])
         traceback.print_exc()
