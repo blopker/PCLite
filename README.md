@@ -28,7 +28,7 @@ Functions
 
 Why?!
 -----
-The original Package Control works well. Why make another? The goal is to mimic Package Control's specification, but with a fresh look at its architecture. Also, by using only Python 3 I'm hoping to leverage the new features to make a more readable and maintainable code base. Here are some of the enhancements I've made:
+The original Package Control works well. Why make another? The goal is to mimic Package Control's specification, but with a fresh look at its architecture. Also by using only Python 3 I'm hoping to leverage the new features to make a more readable and maintainable code base. Here are some of the enhancements I've made:
 
 * Tests: PCLite has a built-in test suite that is automatically run if debug mode is enabled. Tests are essential for any large program. Without them the code can break in unexpected ways which makes it hard to maintain.
 * Threading with futures: PCLite uses a more modern threading model. Package Control uses raw threads to do HTTP requests and disk IO. While this works for a small program, threads can get messy quickly. PCLite uses the notion of Executors or Thread Pools to manage long running tasks. There's even a handy @async decorator that will turn any function into an asynchronous function. It will return a result to a supplied callback. Concurrency is hard, we need to make it as easy as we can.

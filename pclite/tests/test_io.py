@@ -6,6 +6,7 @@ import sublime
 from zipfile import ZipFile
 
 Package = namedtuple('Package', 'name')
+TEST_DIR = 'Packages/PCLite/pclite/tests/'
 
 
 class TestIO(unittest.TestCase):
@@ -14,11 +15,7 @@ class TestIO(unittest.TestCase):
         self.inst_path = sublime.installed_packages_path()
 
     def _get_zip_data(self):
-        root = __file__.rpartition(os.sep)[0]
-        zip_path = os.path.join(root, 'test.zip')
-        f = open(zip_path, 'rb')
-        zip_data = f.read()
-        f.close()
+        zip_data = sublime.load_binary_resource(TEST_DIR + 'test.zip')
         return zip_data
 
     def test_install_zip(self):
