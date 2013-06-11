@@ -28,13 +28,18 @@ By @blopker
 import sublime
 
 FILE_NAME = 'PCLite.sublime-settings'
+PREF = 'Preferences.sublime-settings'
 
 settingsObj = {}
+prefObj = {}
 
 
 def load():
     global settingsObj
     settingsObj = sublime.load_settings(FILE_NAME)
+
+    global prefObj
+    prefObj = sublime.load_settings(PREF)
     # In case settings file is missing the debug value.
     debug = settingsObj.get('debug')
     if not debug:
@@ -66,3 +71,19 @@ def remove_package(package_name):
         pkgs.remove(package_name)
     settingsObj.set('installed_packages', pkgs)
     sublime.save_settings(FILE_NAME)
+
+
+def ignore_package(package_name):
+    ignored = prefObj.get('ignored_packages', [])
+    if package_name not in ignored:
+        ignored.append(package_name)
+    prefObj.set('ignored_packages', ignored)
+    sublime.save_settings(PREF)
+
+
+def unignore_package(package_name):
+    ignored = prefObj.get('ignored_packages', [])
+    if package_name in ignored:
+        ignored.remove(package_name)
+    prefObj.set('ignored_packages', ignored)
+    sublime.save_settings(PREF)

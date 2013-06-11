@@ -102,10 +102,14 @@ def get_installed():
 @async
 def remove_package(package_name):
     try:
-        settings.remove_package(package_name)
         if not io.remove_package(package_name):
             return 'Package %s does not exist! No need to remove.' % package_name
-        return 'Package %s removed.' % package_name
+        settings.remove_package(package_name)
+        return True
+    except PermissionError:
+        log.error('Permission error.')
+        traceback.print_exc()
+        return False
     except:
         log.error('Unable to remove package for unknown reason:')
         traceback.print_exc()

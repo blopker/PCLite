@@ -80,9 +80,9 @@ class PcliteRemovePackageCommand(sublime_plugin.WindowCommand):
         self.status = status.loading('Removing package: %s' % p)
         commands.remove_package(p, self.remove_success)
 
-    def remove_success(self, message):
+    def remove_success(self, success):
         self.status.stop()
-        if message:
-            status.message(message)
+        if success:
+            status.message('Package removed.')
         else:
             status.error('Package removal was unsuccessful.')

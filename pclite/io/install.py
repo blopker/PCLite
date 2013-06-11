@@ -28,10 +28,10 @@ import tempfile
 import shutil
 import os
 import sublime
-from . import logger
+from .. import logger
 log = logger.get(__name__)
-
-PKG_SUFFIX = '.sublime-package'
+from . import util
+from .. import settings
 
 
 def _zipdir(path, zip):
@@ -59,6 +59,7 @@ def _make_zip_file(data):
 
 
 def install_package(package, zip_data):
+    settings.ignore_package(package.name)
     result = True
     try:
         zip_file = _make_zip_file(zip_data)
@@ -75,7 +76,7 @@ def install_package(package, zip_data):
             myzip.extractall(path=tmp_dir)
 
         # Repackage with correct name, location and folder tree
-        pkg = package.name + PKG_SUFFIX
+        pkg = package.name + util.PKG_SUFFIX
         install_path = os.path.join(sublime.installed_packages_path(), pkg)
         with ZipFile(install_path, 'w') as myzip:
             _zipdir(os.path.join(tmp_dir, prefix), myzip)
@@ -91,15 +92,5 @@ def install_package(package, zip_data):
     finally:
         shutil.rmtree(tmp_dir)
         os.remove(zip_file)
+        settings.unignore_package(package.name)
     return result
-
-
-def remove_package(package_name):
-    pkg = package_name + PKG_SUFFIX
-    pkg_path = os.path.join(sublime.installed_packages_path(), pkg)
-    try:
-        os.remove(pkg_path)
-    except:
-        log.error('Package %s does not exist on file system.', package_name)
-        return False
-    return True
