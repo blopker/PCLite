@@ -35,10 +35,6 @@ def _is_function(fn):
     return hasattr(fn, '__call__')
 
 
-def _error(msg):
-    return 'Command execution error: ' + msg
-
-
 def async(fn):
     ''' Decorator for running functions asynchronously.
     Async functions can have a callback as the

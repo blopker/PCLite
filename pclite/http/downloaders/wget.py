@@ -21,28 +21,37 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 '''
-'''
-Module to determine the correct downloader to use.
-By @blopker
-'''
-from . import requests
-from . import null
-from . import wget
+from .downloader_base import DownloaderBase
 from ... import logger
 log = logger.get(__name__)
-
-# Check if this OS supports SSL
-try:
-    import ssl
-    SSL = True
-except ImportError:
-    SSL = False
+import traceback
+import subprocess
+import json
+import shutil
 
 
-def get():
-    if not SSL and wget.is_available():
-        return wget.WgetDownloader()
-    if SSL:
-        return requests.RequestsDownloader()
-    log.error('No suitable downloader found. Everything is terrible.')
-    return null.NullDownloader()
+def is_available():
+    if shutil.which('wget'):
+        return True
+    return False
+
+
+class WgetDownloader(DownloaderBase):
+    """docstring for WgetDownloader"""
+    def get(self, url):
+        try:
+            result = subprocess.check_output(["wget", "-qO-", url])
+        except subprocess.CalledProcessError:
+            log.error('Wget downloader failed.')
+            traceback.print_exc()
+            result = False
+        return result
+
+    def get_json(self, url):
+        a = self.get(url)
+        if a:
+            a = json.loads(a.decode('utf-8'))
+        return a
+
+    def get_file(self, url):
+        return self.get(url)
