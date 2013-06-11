@@ -29,7 +29,7 @@ import traceback
 
 
 class RequestsDownloader(DownloaderBase):
-    """docstring for RequestsDownloader"""
+    """Downloader that uses the Requests library."""
     def get(self, url):
         try:
             return req.get(url)
@@ -41,7 +41,11 @@ class RequestsDownloader(DownloaderBase):
     def get_json(self, url):
         a = self.get(url)
         if a:
-            a = a.json()
+            try:
+                a = a.json()
+            except ValueError:
+                log.error('URL %s does not contain a JSON file.', url)
+                return False
         return a
 
     def get_file(self, url):

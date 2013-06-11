@@ -37,10 +37,10 @@ def is_available():
 
 
 class WgetDownloader(DownloaderBase):
-    """docstring for WgetDownloader"""
+    """Downloader that uses the command line program wget."""
     def get(self, url):
         try:
-            result = subprocess.check_output(["wget", "-qO-", url])
+            result = subprocess.check_output(['wget', '-qO-', url])
         except subprocess.CalledProcessError:
             log.error('Wget downloader failed.')
             traceback.print_exc()
@@ -50,7 +50,11 @@ class WgetDownloader(DownloaderBase):
     def get_json(self, url):
         a = self.get(url)
         if a:
-            a = json.loads(a.decode('utf-8'))
+            try:
+                a = json.loads(a.decode('utf-8'))
+            except ValueError:
+                log.error('URL %s does not contain a JSON file.', url)
+                return False
         return a
 
     def get_file(self, url):

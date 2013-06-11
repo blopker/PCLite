@@ -25,7 +25,7 @@ from .downloader_base import DownloaderBase
 
 
 class NullDownloader(DownloaderBase):
-    """docstring for Downloader"""
+    """Downloader that does nothing. Used if nothing else works."""
     def get(self, url):
         raise NotImplementedError()
 
