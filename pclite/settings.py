@@ -83,8 +83,8 @@ def ignore_package(package_name):
 
 
 def unignore_package(package_name):
-    # Take a nap so ST has time to catch up.
-    time.sleep(1)
+    # Take a nap so ST has time to catch up. May cause exception otherwise.
+    time.sleep(0.5)
     ignored = prefObj.get('ignored_packages', [])
     if package_name in ignored:
         ignored.remove(package_name)

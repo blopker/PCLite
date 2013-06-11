@@ -38,14 +38,14 @@ def remove_package(package_name):
     pkg_path = os.path.join(sublime.installed_packages_path(), pkg)
     try:
         os.remove(pkg_path)
-        result = True
+        success = True
     except PermissionError:
         log.error('Permission error.')
         traceback.print_exc()
-        result = False
+        success = False
     except:
         log.error('Package %s does not exist on file system.', package_name)
         traceback.print_exc()
-        result = False
+        success = False
     settings.unignore_package(package_name)
-    return result
+    return success

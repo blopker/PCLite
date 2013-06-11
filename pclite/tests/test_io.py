@@ -18,7 +18,7 @@ class TestIO(unittest.TestCase):
         zip_data = sublime.load_binary_resource(TEST_DIR + 'test.zip')
         return zip_data
 
-    def test_install_zip(self):
+    def test_install_remove_zip(self):
         pname = 'test-package'
         pzip = pname + '.sublime-package'
         ppath = os.path.join(self.inst_path, pzip)
@@ -31,4 +31,6 @@ class TestIO(unittest.TestCase):
             self.assertIsNone(z.testzip())
             self.assertIn('test.py', z.namelist())
 
-        os.remove(ppath)
+        success = io.remove_package(pname)
+        self.assertTrue(success)
+        self.assertFalse(os.path.exists(ppath))
