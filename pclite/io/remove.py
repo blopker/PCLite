@@ -25,6 +25,7 @@ THE SOFTWARE.
 import os
 import traceback
 import sublime
+
 from .. import logger
 log = logger.get(__name__)
 from .. import settings

@@ -1,6 +1,6 @@
 {
     "repositories":["http://sublime.wbond.net/repositories.json"],
-    // Set to true to run tests and enable drbug output
+    // Set to true to run tests and enable debug output
     "debug": false,
     // Amount of time to cache HTTP requests in seconds.
     "cache_time": 100,

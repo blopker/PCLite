@@ -28,10 +28,11 @@ import tempfile
 import shutil
 import os
 import sublime
+
 from .. import logger
 log = logger.get(__name__)
-from . import util
 from .. import settings
+from . import util
 
 
 def _zipdir(path, zip):

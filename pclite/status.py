@@ -35,6 +35,8 @@ import sublime
 
 statusPool = futures.ThreadPoolExecutor(max_workers=1)
 PLUGIN_NAME = 'PCLite'
+# Default status display time in seconds
+TIMEOUT = 10
 
 
 def _get_current_view():
@@ -60,12 +62,12 @@ def _message_job(msg, seconds):
     view.erase_status(id)
 
 
-def message(msg, seconds=5):
+def message(msg, seconds=TIMEOUT):
     log.info(msg)
     statusPool.submit(_message_job, msg, seconds)
 
 
-def error(msg, seconds=5):
+def error(msg, seconds=TIMEOUT):
     log.error(msg)
     msg = 'ERROR: ' + msg
     statusPool.submit(_message_job, msg, seconds)
