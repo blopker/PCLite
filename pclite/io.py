@@ -44,16 +44,27 @@ def _zipdir(path, zip):
 
 
 def _make_zip_file(data):
-    zip_file = tempfile.mkstemp()[1]
-    with open(zip_file, 'wb') as f:
-        f.write(data)
-    return zip_file
+    try:
+        zh, zip_file = tempfile.mkstemp()
+        with open(zip_file, 'wb') as f:
+            f.write(data)
+        result = zip_file
+    except:
+        log.error('Zip creation failed.')
+        traceback.print_exc()
+        result = False
+    finally:
+        os.close(zh)
+    return result
 
 
 def install_package(package, zip_data):
     result = True
     try:
         zip_file = _make_zip_file(zip_data)
+        if not zip_file:
+            return False
+
         prefix = ''
 
         tmp_dir = tempfile.mkdtemp()
@@ -69,6 +80,10 @@ def install_package(package, zip_data):
         with ZipFile(install_path, 'w') as myzip:
             _zipdir(os.path.join(tmp_dir, prefix), myzip)
 
+    except PermissionError:
+        log.error('Permission error.')
+        traceback.print_exc()
+        result = False
     except:
         log.error('Unexpected exception:')
         traceback.print_exc()

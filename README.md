@@ -19,7 +19,7 @@ The "Packages" directory is located at:
 
     * Note: SSL is currently not enabled in ST3 for Linux. In this case PCLite uses `wget` to download instead. Make sure it's installed. For Ubuntu that's: `sudo apt-get install wget`
 
-* Windows: `%APPDATA%/Sublime Text 3/Packages/`
+* Windows: `%APPDATA%\Sublime Text 3\Packages\`
 
 Functions
 ---------
