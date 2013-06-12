@@ -1,7 +1,7 @@
 PCLite
 ======
 
-Alternate Package Control for Sublime Text 3
+Alternate [Package Control](https://github.com/wbond/sublime_package_control) for Sublime Text 3
 
 Installing
 ----------
