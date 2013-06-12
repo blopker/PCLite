@@ -1,11 +1,23 @@
 {
-    "repositories":["http://sublime.wbond.net/repositories.json"],
-    // Set to true to run tests and enable debug output
+    ////////////////////////////////////
+    /// Debug
+    ////////////////////////////////////
+    // Set to true to run tests on startup, disable cache and enable debug output.
     "debug": false,
-    // Amount of time to cache HTTP requests in seconds.
-    "cache_time": 100,
-    // HTTP timeout in seconds
-    "http_timeout": 10,
+
+    ////////////////////////////////////
+    /// Packages
+    ////////////////////////////////////
+    // Repository URLs
+    "repositories":["http://sublime.wbond.net/repositories.json"],
     // Names of the packages to be managed.
-    "installed_packages": []
+    "installed_packages": [],
+
+    ////////////////////////////////////
+    /// HTTP
+    ////////////////////////////////////
+    // Amount of time to cache HTTP requests in seconds.
+    "cache_time": 1000,
+    // HTTP timeout in seconds
+    "http_timeout": 10
 }

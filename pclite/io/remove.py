@@ -25,6 +25,7 @@ THE SOFTWARE.
 import os
 import traceback
 import sublime
+import time
 
 from .. import logger
 log = logger.get(__name__)
@@ -47,5 +48,7 @@ def remove_package(package_name):
         log.error('Package %s does not exist on file system.', package_name)
         traceback.print_exc()
         success = False
+    # Take a nap so ST has time to catch up. May cause exception otherwise.
+    time.sleep(0.5)
     settings.unignore_package(package_name)
     return success

@@ -35,6 +35,7 @@ def cache(fn):
         # No cache for debugging.
         if settings.isDebug():
             return False
+        # This could check other caches for expiration and remove.
         if args in cacheDB:
             cache_time = settings.get('cache_time', 0)
             age = time.time() - cacheDB[args][0]
@@ -43,7 +44,8 @@ def cache(fn):
         return False
 
     def putCache(args, ans):
-        cacheDB[args] = (time.time(), ans)
+        if ans:
+            cacheDB[args] = (time.time(), ans)
 
     def getCache(args):
         return cacheDB[args][1]

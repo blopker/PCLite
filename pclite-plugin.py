@@ -26,6 +26,8 @@ from PCLite.pclite import commands
 from PCLite.pclite import status
 import sublime_plugin
 
+NO_SELECTION = -1
+
 
 class PcliteInstallPackageCommand(sublime_plugin.WindowCommand):
     def run(self):
@@ -45,7 +47,7 @@ class PcliteInstallPackageCommand(sublime_plugin.WindowCommand):
         self.window.show_quick_panel(self.list, self.on_select)
 
     def on_select(self, item_idx):
-        if item_idx is -1:
+        if item_idx is NO_SELECTION:
             return
         p = self.list[item_idx][0]
         self.status = status.loading('Installing package: %s' % p)
@@ -74,7 +76,7 @@ class PcliteRemovePackageCommand(sublime_plugin.WindowCommand):
         self.window.show_quick_panel(self.list, self.on_select)
 
     def on_select(self, item_idx):
-        if item_idx is -1:
+        if item_idx is NO_SELECTION:
             return
         p = self.list[item_idx]
         self.status = status.loading('Removing package: %s' % p)

@@ -92,7 +92,6 @@ class Loader(object):
         view = _get_current_view()
         id = _get_id(msg)
         while self.running:
-            view = _get_current_view()
             stat = msg + ' [' + loadingChars[pos] + ']'
             stat = _append_plugin_name(stat)
             view.set_status(id, stat)
