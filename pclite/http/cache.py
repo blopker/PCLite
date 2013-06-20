@@ -31,30 +31,36 @@ def cache(fn):
     '''
     cacheDB = {}
 
-    def isCached(args):
-        # No cache for debugging.
-        if settings.isDebug():
-            return False
-        # This could check other caches for expiration and remove.
-        if args in cacheDB:
-            cache_time = settings.get('cache_time', 0)
-            age = time.time() - cacheDB[args][0]
-            if age < cache_time:
-                return True
-        return False
-
     def putCache(args, ans):
+        # Disable cache for debug.
+        if settings.isDebug():
+            return
+
         if ans:
             cacheDB[args] = (time.time(), ans)
 
     def getCache(args):
-        return cacheDB[args][1]
+        # Disable cache for debug.
+        if settings.isDebug():
+            return []
+
+        # Get result while cleaning old cache.
+        t = time.time()
+        cache_time = settings.get('cache_time', 0)
+        ans = False
+        for c in cacheDB:
+            age = t - cacheDB[c][0]
+            if age > cache_time:
+                del cacheDB[c]
+                continue
+            if c == args:
+                ans = cacheDB[args][1]
+        return ans
 
     def wrap(*args):
-        if isCached(args):
-            return getCache(args)
-        else:
+        ans = getCache(args)
+        if ans is False:
             ans = fn(*args)
             putCache(args, ans)
-            return ans
+        return ans
     return wrap
