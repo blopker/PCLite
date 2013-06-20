@@ -14,6 +14,6 @@ def plugin_loaded():
     settings.load()
     # Initialize the logger with this package's root name
     logger.init(__name__, settings.get('debug'))
-    if settings.isDebug():
+    if settings.get('run_tests'):
         run_tests()
     log.debug('Loaded.')
