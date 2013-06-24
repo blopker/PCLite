@@ -2,8 +2,10 @@
     ////////////////////////////////////
     /// Debug
     ////////////////////////////////////
-    // Set to true to run tests on startup, disable cache and enable debug output.
+    // Set to true to disable cache and enable debug output.
     "debug": false,
+    // Set to true to run tests on startup,
+    "run_tests": false,
 
     ////////////////////////////////////
     /// Packages
