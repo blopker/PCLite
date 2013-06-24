@@ -48,6 +48,7 @@ class PcliteInstallPackageCommand(sublime_plugin.WindowCommand):
 
     def on_select(self, item_idx):
         if item_idx is NO_SELECTION:
+            status.message('Package install canceled.')
             return
         p = self.list[item_idx][0]
         self.status = status.loading('Installing package: %s' % p)

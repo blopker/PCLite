@@ -52,6 +52,7 @@ def get_file(url):
 
 def _run_downloader(fn, url):
     try:
+        log.debug('HTTP url %s with function %s', url, fn.__name__)
         return fn(url)
     except NotImplementedError:
         log.error('Function %s not implemented in downloader %s.',

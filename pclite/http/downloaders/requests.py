@@ -32,6 +32,7 @@ class RequestsDownloader(DownloaderBase):
     """Downloader that uses the Requests library."""
     def get(self, url):
         try:
+            log.debug('Requests downloader getting url %s', url)
             return req.get(url)
         except TypeError:
             log.error('This platform does not support SSL with the Requests downloader.')

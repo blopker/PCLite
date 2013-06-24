@@ -41,8 +41,10 @@ except ImportError:
 
 def get():
     if not SSL and wget.is_available():
+        log.debug('Using WGET downloader.')
         return wget.WgetDownloader()
     if SSL:
+        log.debug('Using Requests downloader.')
         return requests.RequestsDownloader()
     log.error('No suitable downloader found. Everything is terrible.')
     return null.NullDownloader()

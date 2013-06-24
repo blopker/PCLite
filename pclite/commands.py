@@ -49,10 +49,16 @@ def get_repository():
         repos = []
         urls = settings.get('repositories', [])
         for url in urls:
+            log.debug('Getting repo at url %s', url)
             try:
                 j = http.get_json(url)
+                log.debug('Got repo at url %s', url)
                 if j:
                     repos.append(Repository(j))
+                    log.debug('Processed repo at url %s', url)
+                else:
+                    log.debug('Processing failed for repo at url %s', url)
+                    log.debug(j)
             except:
                 log.warning('Unable to fetch repository at %s', url)
 

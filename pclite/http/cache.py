@@ -42,7 +42,7 @@ def cache(fn):
     def getCache(args):
         # Disable cache for debug.
         if settings.isDebug():
-            return []
+            return False
 
         # Get result while cleaning old cache.
         t = time.time()

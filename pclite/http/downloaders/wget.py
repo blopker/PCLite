@@ -40,6 +40,7 @@ class WgetDownloader(DownloaderBase):
     """Downloader that uses the command line program wget."""
     def get(self, url):
         try:
+            log.debug('Wget downloader getting url %s', url)
             result = subprocess.check_output(['wget', '-qO-', url])
         except subprocess.CalledProcessError:
             log.error('Wget downloader failed.')
