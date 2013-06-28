@@ -38,7 +38,7 @@ from . import settings
 from . import http
 from . import io
 from .async import async
-from .models import Repository
+from .repository import Repository
 import traceback
 
 

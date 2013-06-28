@@ -1,5 +1,5 @@
 import unittest
-from .. import models
+from .. import repository
 from . import data
 import json
 
@@ -8,14 +8,14 @@ class TestRepository(unittest.TestCase):
 
     def setUp(self):
         self.json = json.loads(data.REPOSITORIES_JSON)
-        self.repo = models.Repository(self.json)
+        self.repo = repository.Repository(self.json)
 
     def test_empty_repo(self):
-        repo = models.Repository()
+        repo = repository.Repository()
         self.assertEqual(0, len(repo.packages))
 
     def test_merge(self):
-        repo = models.Repository()
+        repo = repository.Repository()
         repo.merge(self.repo)
         self.assertEqual(len(self.repo.packages), len(repo.packages))
 
