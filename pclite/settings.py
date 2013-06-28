@@ -22,32 +22,32 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 '''
 '''
-Global settings module for Sublime Test plugins
+Global settings module for PCLite
 By @blopker
 '''
 import sublime
 
-FILE_NAME = 'PCLite.sublime-settings'
-PREF = 'Preferences.sublime-settings'
+PLUGIN_PREF = 'PCLite.sublime-settings'
+SUBLIME_PREF = 'Preferences.sublime-settings'
 
-settingsObj = {}
-prefObj = {}
+pluginObj = {}
+sublimeObj = {}
 
 
 def load():
-    global settingsObj
-    settingsObj = sublime.load_settings(FILE_NAME)
+    global pluginObj
+    pluginObj = sublime.load_settings(PLUGIN_PREF)
 
-    global prefObj
-    prefObj = sublime.load_settings(PREF)
+    global sublimeObj
+    sublimeObj = sublime.load_settings(SUBLIME_PREF)
     # In case settings file is missing the debug value.
-    debug = settingsObj.get('debug')
+    debug = pluginObj.get('debug')
     if not debug:
-        settingsObj.set('debug', True)
+        pluginObj.set('debug', True)
 
 
 def get(*args):
-    return settingsObj.get(*args)
+    return pluginObj.get(*args)
 
 
 def isDebug():
@@ -59,31 +59,31 @@ def platform():
 
 
 def add_package(package):
-    pkgs = settingsObj.get('installed_packages', [])
+    pkgs = pluginObj.get('installed_packages', [])
     pkgs.append(package.name)
-    settingsObj.set('installed_packages', pkgs)
-    sublime.save_settings(FILE_NAME)
+    pluginObj.set('installed_packages', pkgs)
+    sublime.save_settings(PLUGIN_PREF)
 
 
 def remove_package(package_name):
-    pkgs = settingsObj.get('installed_packages', [])
+    pkgs = pluginObj.get('installed_packages', [])
     if package_name in pkgs:
         pkgs.remove(package_name)
-    settingsObj.set('installed_packages', pkgs)
-    sublime.save_settings(FILE_NAME)
+    pluginObj.set('installed_packages', pkgs)
+    sublime.save_settings(PLUGIN_PREF)
 
 
 def ignore_package(package_name):
-    ignored = prefObj.get('ignored_packages', [])
+    ignored = sublimeObj.get('ignored_packages', [])
     if package_name not in ignored:
         ignored.append(package_name)
-    prefObj.set('ignored_packages', ignored)
-    sublime.save_settings(PREF)
+    sublimeObj.set('ignored_packages', ignored)
+    sublime.save_settings(SUBLIME_PREF)
 
 
 def unignore_package(package_name):
-    ignored = prefObj.get('ignored_packages', [])
+    ignored = sublimeObj.get('ignored_packages', [])
     if package_name in ignored:
         ignored.remove(package_name)
-    prefObj.set('ignored_packages', ignored)
-    sublime.save_settings(PREF)
+    sublimeObj.set('ignored_packages', ignored)
+    sublime.save_settings(SUBLIME_PREF)

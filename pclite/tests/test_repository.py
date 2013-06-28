@@ -28,8 +28,8 @@ class TestRepository(unittest.TestCase):
         p = self.repo.get_package('not a package')
         self.assertFalse(p)
 
-    def test_install_list(self):
-        install_list = self.repo.install_list()
+    def test_list(self):
+        install_list = self.repo.list()
 
         self.assertIsInstance(install_list, list)
         self.assertEqual(len(install_list), 2)

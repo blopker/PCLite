@@ -44,6 +44,10 @@ import traceback
 
 @async
 def get_repository():
+    return _update_repository()
+
+
+def _update_repository():
     try:
         # Get all the repositories
         repos = []

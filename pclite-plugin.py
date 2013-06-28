@@ -43,7 +43,7 @@ class PcliteInstallPackageCommand(sublime_plugin.WindowCommand):
                          'report the stack traces.')
             return
         self.repo = repo
-        self.list = repo.install_list()
+        self.list = repo.list()
         self.window.show_quick_panel(self.list, self.on_select)
 
     def on_select(self, item_idx):
@@ -74,6 +74,38 @@ class PcliteRemovePackageCommand(sublime_plugin.WindowCommand):
             status.error('No packages installed! Please install some first.')
             return
         self.list = installed
+        self.window.show_quick_panel(self.list, self.on_select)
+
+    def on_select(self, item_idx):
+        if item_idx is NO_SELECTION:
+            return
+        p = self.list[item_idx]
+        self.status = status.loading('Removing package: %s' % p)
+        commands.remove_package(p, self.remove_success)
+
+    def remove_success(self, success):
+        self.status.stop()
+        if success:
+            status.message('Package removed.')
+        else:
+            status.error('Package removal was unsuccessful.')
+
+
+class PcliteUpdatePackageCommand(sublime_plugin.WindowCommand):
+    def run(self):
+        print('Running update command.')
+        self.status = status.loading('Getting installed package list')
+        commands.get_installed(self.display_list)
+
+    def display_list(self, installed):
+        self.status.stop()
+        if not installed:
+            status.error('No packages installed! Please install some first.')
+            return
+        allPackage = 'Update all packages'
+        self.list = [allPackage]
+        self.list.extend(installed)
+        print(self.list)
         self.window.show_quick_panel(self.list, self.on_select)
 
     def on_select(self, item_idx):
