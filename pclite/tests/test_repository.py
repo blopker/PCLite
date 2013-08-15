@@ -1,14 +1,17 @@
 import unittest
+import sublime
 from .. import repository
-from . import data
 import json
+
+test_channel = sublime.load_resource('Packages/PCLite/pclite/tests/channel.json')
+js = json.loads(test_channel)['packages_cache']['https://sublime.wbond.net/packages_2.json']
 
 
 class TestRepository(unittest.TestCase):
 
     def setUp(self):
-        self.json = json.loads(data.REPOSITORIES_JSON)
-        self.repo = repository.Repository(self.json)
+        pkgs = [repository.Package(x) for x in js]
+        self.repo = repository.Repository(*pkgs)
 
     def test_empty_repo(self):
         repo = repository.Repository()
@@ -20,7 +23,7 @@ class TestRepository(unittest.TestCase):
         self.assertEqual(len(self.repo.packages), len(repo.packages))
 
     def test_get_package(self):
-        name = 'WordCount'
+        name = 'SVN'
 
         p = self.repo.get_package(name)
         self.assertEqual(name, p.name)
@@ -32,12 +35,8 @@ class TestRepository(unittest.TestCase):
         install_list = self.repo.list()
 
         self.assertIsInstance(install_list, list)
-        self.assertEqual(len(install_list), 2)
 
         packageOne = install_list[0]
-        self.assertEqual('WordCount', packageOne[0])
-        self.assertEqual('Real time Word Counter.', packageOne[1])
-        self.assertIn('2013.03', packageOne[2])
-
-        packageTwo = install_list[1]
-        self.assertEqual('23', packageTwo[1])
+        self.assertEqual('Alignment', packageOne[0])
+        self.assertTrue('alignment' in packageOne[1])
+        self.assertIn('2.1.0', packageOne[2])

@@ -28,6 +28,7 @@ import traceback
 from .lib.concurrent import futures
 from . import logger
 log = logger.get(__name__)
+from . import settings
 asyncPool = futures.ThreadPoolExecutor(max_workers=10)
 
 
@@ -74,3 +75,30 @@ def async(fn):
         if callback:
             asyncFuture.add_done_callback(cb)
     return wrap
+
+
+def asyncMap(fn, *args):
+    ''' A method that emulates Python's built-in map(),
+    but each function call is done in async.
+    asyncMap() blocks until all functions have finished.
+    Returns a list of results. If a function call times out
+    or raises an exception that result will be False.
+
+    e.x.
+    >>> asyncMap(max, [1,3,6], [2,2,7])
+    [2,3,7]
+    '''
+
+    timeout = settings.get('http_timeout', 10) + 5
+    calls = max([len(x) for x in args])
+    results = []
+    with futures.ThreadPoolExecutor(max_workers=10) as exe:
+        maps = exe.map(fn, *args, timeout=timeout)
+        for i in range(calls):
+            try:
+                results.append(maps.__next__())
+            except:
+                results.append(False)
+                traceback.print_exc()
+
+    return results

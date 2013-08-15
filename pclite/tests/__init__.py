@@ -3,7 +3,10 @@ from .. import settings
 from .. import logger
 log = logger.get(__name__)
 
-tests = ['test_repository', 'test_io']
+tests = ['test_async',
+         'test_io',
+         'test_channel',
+         'test_repository']
 
 
 def run():

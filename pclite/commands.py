@@ -38,54 +38,19 @@ from . import settings
 from . import http
 from . import io
 from .async import async
-from .repository import Repository
+from . import repository
 import traceback
 
 
 @async
 def get_repository():
-    return _update_repository()
-
-
-def _update_repository():
-    try:
-        # Get all the repositories
-        repos = []
-        urls = settings.get('repositories', [])
-        for url in urls:
-            log.debug('Getting repo at url %s', url)
-            try:
-                j = http.get_json(url)
-                log.debug('Got repo at url %s', url)
-                if j:
-                    repos.append(Repository(j))
-                    log.debug('Processed repo at url %s', url)
-                else:
-                    log.debug('Processing failed for repo at url %s', url)
-                    log.debug(j)
-            except:
-                log.warning('Unable to fetch repository at %s', url)
-
-        # Merge into one repo
-        repo = Repository()
-        for r in repos:
-            repo.merge(r)
-
-        if len(repo.packages) is 0:
-            log.error('No packages found.')
-            return False
-
-        return repo
-    except:
-        log.error('Unable to get repository for unknown reason:')
-        traceback.print_exc()
-    return False
+    return repository.update_repository()
 
 
 @async
-def install_package(package_name, repository):
+def install_package(package_name, repo):
     try:
-        p = repository.get_package(package_name)
+        p = repo.get_package(package_name)
         if not p:
             log.error('Unable to find package %s in repository.', package_name)
             return False

@@ -10,8 +10,8 @@
     ////////////////////////////////////
     /// Packages
     ////////////////////////////////////
-    // Repository URLs
-    "repositories":["http://sublime.wbond.net/repositories.json"],
+    // Channel URLs
+    "channels":["https://sublime.wbond.net/channel.json"],
     // Names of the packages to be managed.
     "installed_packages": [],
 

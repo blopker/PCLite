@@ -58,6 +58,10 @@ def platform():
     return sublime.platform()
 
 
+def sublime_version():
+    return int(sublime.version())
+
+
 def add_package(package):
     pkgs = pluginObj.get('installed_packages', [])
     pkgs.append(package.name)

@@ -23,36 +23,17 @@ THE SOFTWARE.
 '''
 
 
-class Repository(object):
-    """docstring for Repository"""
-    def __init__(self, *args):
-        self.packages = {}
-        for package in args:
-            try:
-                self._add_package(package)
-            except AttributeError:
-                continue
+class Channel(object):
+    """docstring for Channel"""
+    def __init__(self, json):
+        self.json = json
+        self.cache_key = 'packages_cache'
+        self.repo_key = 'repositories'
 
-    def _add_package(self, package):
-        packages = {}
-        if package.is_supported():
-            packages[package.name] = package
-        self.packages.update(packages)
+    def urls(self):
+        return self.json[self.repo_key]
 
-    def _sort_package_list(self, package_list):
-        def compare(lis):
-            return lis[0].upper()
-        return sorted(package_list, key=compare)
-
-    def list(self):
-        install_list = []
-        for package in self.packages.values():
-            install_list.append(package.get_list())
-        return self._sort_package_list(install_list)
-
-    def merge(self, repository):
-        self.packages.update(repository.packages)
-        return self
-
-    def get_package(self, name):
-        return self.packages.get(name, False)
+    def get_cache(self, url):
+        if self.cache_key in self.json:
+            return self.json[self.cache_key].get(url, False)
+        return False
