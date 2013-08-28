@@ -59,6 +59,7 @@ def update_repository():
         channels = async.asyncMap(_get_channel, channel_urls)
 
         # Get all the repositories
+        repos = []
         for channel in channels:
             if channel is False:
                 continue
