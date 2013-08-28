@@ -20,7 +20,6 @@ def _make_repo(url, cache=False):
             j = http.get_json(url).get('packages', [])
         else:
             j = cache
-        print(j)
         if j:
             pkgs = [Package(x) for x in j]
             repo = Repository(*pkgs)
