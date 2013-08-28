@@ -8,7 +8,7 @@ Installing
 
 Clone the repository in your Sublime Text "Packages" directory:
 
-    git clone https://github.com/PCLite/PCLite.git
+    git clone https://github.com/blopker/PCLite.git
 
 
 The "Packages" directory is located at:
